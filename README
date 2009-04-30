@@ -1,0 +1,9 @@
+Pages Editor - Minimal
+------------------------------------
+
+Version: 1.0
+Author: Alistair Kearney (alistair@symphony21.com)
+Build Date: 30th April 2009
+Requirements: Latest Symphony 2.0.2
+
+Replacement Blueprint > Pages 'Edit' page. Does not have the body field, making it safer to use and external editor.
