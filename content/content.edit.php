@@ -17,6 +17,7 @@
 		function view(){
 			
 			$this->setPageType('form');
+			$this->addStylesheetToHead(URL . '/extensions/pages_editor_minimal/assets/screen.css', 'screen', 1200);
 						
 			$fields = array();
 
@@ -80,17 +81,14 @@
 			if(trim($title) == '') $title = $existing['title'];
 			
 			$this->setTitle(__(($title ? '%1$s &ndash; %2$s &ndash; %3$s' : '%1$s &ndash; %2$s'), array(__('Symphony'), __('Pages'), $title)));
-			$this->appendSubheading(($title ? $title : __('Untitled')));
-
+#			$this->appendSubheading(($title ? $title : __('Untitled')));
+			$label = Widget::Label(__('Title'));		
+			$label->appendChild(Widget::Input('fields[title]', General::sanitize($fields['title'])));
+			$this->Form->appendChild((isset($this->_errors['title']) ? $this->wrapFormElementWithError($label, $this->_errors['title']) : $label));
 						
 			$fieldset = new XMLElement('fieldset');
 			$fieldset->setAttribute('class', 'primary');
 			
-			$label = Widget::Label(__('Title'));		
-			$label->appendChild(Widget::Input('fields[title]', General::sanitize($fields['title'])));
-			$fieldset->appendChild((isset($this->_errors['title']) ? $this->wrapFormElementWithError($label, $this->_errors['title']) : $label));
-
-
 			$group = new XMLElement('div');
 			$group->setAttribute('class', 'group');
 			$label = Widget::Label(__('Events'));
@@ -122,13 +120,13 @@
 			
 			$this->Form->appendChild($fieldset);
 			
-			$div = new XMLElement('div');
-			$div->setAttribute('class', 'secondary');			
-			
+			$fieldset = new XMLElement('fieldset');
+			$fieldset->setAttribute('class', 'secondary');			
+
 			
 			$label = Widget::Label(__('URL Handle'));
 			$label->appendChild(Widget::Input('fields[handle]', $fields['handle']));
-			$div->appendChild((isset($this->_errors['handle']) ? $this->wrapFormElementWithError($label, $this->_errors['handle']) : $label));
+			$fieldset->appendChild((isset($this->_errors['handle']) ? $this->wrapFormElementWithError($label, $this->_errors['handle']) : $label));
 			
 			$pages = $this->_Parent->Database->fetch("SELECT * FROM `tbl_pages` WHERE `id` != '{$page_id}' ORDER BY `title` ASC");
 			
@@ -156,11 +154,11 @@
 			}
 			
 			$label->appendChild(Widget::Select('fields[parent]', $options));
-			$div->appendChild($label);
+			$fieldset->appendChild($label);
 
 			$label = Widget::Label(__('URL Parameters'));
 			$label->appendChild(Widget::Input('fields[params]', $fields['params']));				
-			$div->appendChild($label);
+			$fieldset->appendChild($label);
 
 			$div3 = new XMLElement('div');
 			$label = Widget::Label(__('Page Type'));
@@ -172,9 +170,9 @@
 			if($types = $this->__fetchAvailablePageTypes()) foreach($types as $type) $ul->appendChild(new XMLElement('li', $type));
 			$div3->appendChild($ul);
 			
-			$div->appendChild($div3);
+			$fieldset->appendChild($div3);
 
-			$this->Form->appendChild($div);
+			$this->Form->appendChild($fieldset);
 			
 					
 			/*$utilities = General::listStructure(UTILITIES, array('xsl'), false, 'asc', UTILITIES);
